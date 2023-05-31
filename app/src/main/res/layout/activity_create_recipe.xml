@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/lappunenHoney">
+    
+    <EditText
+        android:id="@+id/etRecipeName"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:background="@color/white"
+        
+        android:hint=" Kirjoita reseptin nimi tähän"
+        android:textSize="24sp"
+        
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    
+    <EditText
+        android:id="@+id/etRecipeIngredients"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+
+        android:hint="Kirjoita reseptin ainesosat tähän pilkuilla eroteltuna"
+        android:textSize="20sp"
+
+        android:background="@color/white"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etRecipeName"/>
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:layout_marginLeft="40dp"
+
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/roundbutton"
+
+        android:text="X"
+        android:textSize="70sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnConfirmNewRecipe"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:background="@drawable/roundbutton"
+
+        android:text="+"
+        android:textSize="70sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="30dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
