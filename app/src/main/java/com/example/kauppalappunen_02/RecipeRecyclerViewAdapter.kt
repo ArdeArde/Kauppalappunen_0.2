@@ -1,16 +1,12 @@
-package com.example.kauppalappunen_02.viewmodel
+package com.example.kauppalappunen_02
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kauppalappunen_02.R
-import com.example.kauppalappunen_02.db.Recipe
 
-class RecipeRecyclerViewAdapter(): RecyclerView.Adapter<RecipeViewHolder>() {
-
-    private val recipeList = ArrayList<Recipe>()
+class RecipeRecyclerViewAdapter(private val recipeList:List<Recipe>, private val clickListener: (Recipe) -> Unit): RecyclerView.Adapter<RecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,20 +19,20 @@ class RecipeRecyclerViewAdapter(): RecyclerView.Adapter<RecipeViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        holder.bind(recipeList[position])
-    }
-
-    fun setList(recipes:List<Recipe>){
-        recipeList.clear()
-        recipeList.addAll(recipes)
+        val recipe = recipeList[position]
+        holder.bind(recipe,clickListener)
     }
 
 }
 
 class RecipeViewHolder(private val view : View):RecyclerView.ViewHolder(view){
 
-    fun bind(recipe: Recipe){
+    fun bind(recipe: Recipe, clickListener: (Recipe) -> Unit){
         val recipeNameTextView = view.findViewById<TextView>(R.id.tvRecipeName)
         recipeNameTextView.text = recipe.name
+
+        view.setOnClickListener{
+            clickListener(recipe)
+        }
     }
 }

@@ -1,26 +1,20 @@
 package com.example.kauppalappunen_02
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.AbsListView.RecyclerListener
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kauppalappunen_02.db.RecipeDatabase
-import com.example.kauppalappunen_02.viewmodel.RecipeRecyclerViewAdapter
-import com.example.kauppalappunen_02.viewmodel.RecipeViewModel
-import com.example.kauppalappunen_02.viewmodel.RecipeViewModelFactory
 
 class RecipesActivity : ComponentActivity(){
 
     private lateinit var recipeMenu: RecyclerView
-    private lateinit var viewModel: RecipeViewModel
-    private lateinit var adapter: RecipeRecyclerViewAdapter
+    private var recipeList = listOf<Recipe>(
+        Recipe("Väärin", "Meni")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -30,11 +24,10 @@ class RecipesActivity : ComponentActivity(){
         val exitButton = findViewById<Button>(R.id.btnExit)
         val newRecipeButton = findViewById<Button>(R.id.btnAddNewRecipe)
 
-        val recipeDao = RecipeDatabase.getInstance(application).recipeDao()
-        val factory = RecipeViewModelFactory(recipeDao)
-        viewModel = ViewModelProvider(this,factory).get(RecipeViewModel::class.java)
+        recipeList = readRecipesFromResources("recipes")
+        Log.i("mytag", recipeList.toString())
 
-        initRecyclerView()
+        initRecyclerView(recipeList)
 
         exitButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -47,18 +40,31 @@ class RecipesActivity : ComponentActivity(){
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView(recipeList : List<Recipe>){
         recipeMenu.layoutManager = LinearLayoutManager(this)
-        adapter = RecipeRecyclerViewAdapter()
-        recipeMenu.adapter = adapter
-        displayRecipeList()
+        recipeMenu.adapter = RecipeRecyclerViewAdapter(recipeList){selectedItem: Recipe ->
+            listItemClicked(selectedItem)
+        }
+
+    }
+    
+    private fun readRecipesFromResources(recipeFileName : String) : MutableList<Recipe>{
+        val resourceId = getResources().getIdentifier(recipeFileName, "array", packageName)
+        val tempRecipeList : MutableList<Recipe> = mutableListOf()
+        val array = resources.getStringArray(resourceId)
+        array.forEach{
+            val recipeAsArray = it.split(',')
+            Log.i("mytag",recipeAsArray.toString())
+            val recipe = Recipe(recipeAsArray[0], recipeAsArray[1])
+            tempRecipeList.add(recipe)
+        }
+        Log.i("mytag", tempRecipeList.toString())
+        return tempRecipeList
     }
 
-    private fun displayRecipeList(){
-        viewModel.allRecipes.observe(this){
-            Log.i("mytag", "got here! it is: $it")
-                adapter.setList(it)
-                adapter.notifyDataSetChanged()
-        }
+    private fun listItemClicked(recipe : Recipe){
+        Toast.makeText(this, "Bruh", Toast.LENGTH_SHORT).show()
     }
+        
+    
 }

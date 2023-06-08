@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recipes">
+        <item>nistipata,makarooni-jauheliha-majo</item>
+        <item>bolognese,jauheliha</item>
+    </string-array>
+</resources>
