@@ -3,15 +3,47 @@ package com.example.kauppalappunen_02
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.kauppalappunen_02.db.Recipe
+import com.example.kauppalappunen_02.db.RecipeDao
+import com.example.kauppalappunen_02.db.RecipeDatabase
+import com.example.kauppalappunen_02.vm.RecipeViewModel
+import com.example.kauppalappunen_02.vm.RecipeViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+private lateinit var exitButton: Button
+private lateinit var confirmListButton: Button
+private lateinit var recipeMenu: RecyclerView
+private var recipeList = listOf<Recipe>()
+private lateinit var viewModel: RecipeViewModel
+private lateinit var scope: CoroutineScope
+private lateinit var dao: RecipeDao
+private lateinit var factory: RecipeViewModelFactory
 class CreateShoppingListAcitivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_shopping_list)
 
-        val exitButton = findViewById<Button>(R.id.btnExit)
-        val confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
+        recipeMenu = findViewById<RecyclerView>(R.id.rvRecipeMenu)
+        exitButton = findViewById<Button>(R.id.btnExit)
+        confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
+
+        dao = RecipeDatabase.getInstance(application).RecipeDao()
+        factory = RecipeViewModelFactory(dao)
+        viewModel = ViewModelProvider(this, factory).get(RecipeViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.Main)
+
+        scope.launch{
+            recipeList = dao.getAllRecipes()
+            initRecyclerView(recipeList)
+        }
 
         exitButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -22,5 +54,16 @@ class CreateShoppingListAcitivity : ComponentActivity(){
             val intent = Intent(this, ShoppingListAcitivty::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun initRecyclerView(recipeList : List<Recipe>){
+        recipeMenu.layoutManager = LinearLayoutManager(this)
+        recipeMenu.adapter = RecipeRecyclerViewAdapter(recipeList){selectedItem: Recipe ->
+            listItemClicked(selectedItem)
+        }
+    }
+
+    private fun listItemClicked(recipe : Recipe){
+        Toast.makeText(this, "bruh", Toast.LENGTH_SHORT).show()
     }
 }

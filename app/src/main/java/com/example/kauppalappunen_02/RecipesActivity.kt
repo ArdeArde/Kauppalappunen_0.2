@@ -3,18 +3,39 @@ package com.example.kauppalappunen_02
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kauppalappunen_02.db.Recipe
+import com.example.kauppalappunen_02.db.RecipeDao
+import com.example.kauppalappunen_02.db.RecipeDatabase
+import com.example.kauppalappunen_02.vm.RecipeViewModel
+import com.example.kauppalappunen_02.vm.RecipeViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecipesActivity : ComponentActivity(){
 
     private lateinit var recipeMenu: RecyclerView
     private var recipeList = listOf<Recipe>(
-        Recipe("Väärin", "Meni")
+        Recipe(0, "Väärin", "Meni")
     )
+    private lateinit var viewModel: RecipeViewModel
+    private lateinit var cardView: CardView
+    private lateinit var cardText: TextView
+    private lateinit var cardExitButton: Button
+    private lateinit var cardConfirmButton: Button
+    private lateinit var scope: CoroutineScope
+    private lateinit var dao: RecipeDao
+    private lateinit var factory: RecipeViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -24,10 +45,24 @@ class RecipesActivity : ComponentActivity(){
         val exitButton = findViewById<Button>(R.id.btnExit)
         val newRecipeButton = findViewById<Button>(R.id.btnAddNewRecipe)
 
-        recipeList = readRecipesFromResources("recipes")
-        Log.i("mytag", recipeList.toString())
+        dao = RecipeDatabase.getInstance(application).RecipeDao()
+        factory = RecipeViewModelFactory(dao)
+        viewModel = ViewModelProvider(this,factory).get(RecipeViewModel::class.java)
+        scope = CoroutineScope(Dispatchers.Main)
 
-        initRecyclerView(recipeList)
+        //Cardview Things
+
+        cardView = findViewById<CardView>(R.id.cvWindow)
+        cardText = findViewById<TextView>(R.id.tvCardText)
+        cardExitButton = findViewById<Button>(R.id.btnCardNegative)
+        cardConfirmButton = findViewById<Button>(R.id.btnCardPositive)
+
+        //Cardview
+
+        scope.launch{
+            recipeList = dao.getAllRecipes()
+            initRecyclerView(recipeList)
+        }
 
         exitButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -45,26 +80,22 @@ class RecipesActivity : ComponentActivity(){
         recipeMenu.adapter = RecipeRecyclerViewAdapter(recipeList){selectedItem: Recipe ->
             listItemClicked(selectedItem)
         }
-
     }
-    
-    private fun readRecipesFromResources(recipeFileName : String) : MutableList<Recipe>{
-        val resourceId = getResources().getIdentifier(recipeFileName, "array", packageName)
-        val tempRecipeList : MutableList<Recipe> = mutableListOf()
-        val array = resources.getStringArray(resourceId)
-        array.forEach{
-            val recipeAsArray = it.split(',')
-            Log.i("mytag",recipeAsArray.toString())
-            val recipe = Recipe(recipeAsArray[0], recipeAsArray[1])
-            tempRecipeList.add(recipe)
-        }
-        Log.i("mytag", tempRecipeList.toString())
-        return tempRecipeList
-    }
-
     private fun listItemClicked(recipe : Recipe){
-        Toast.makeText(this, "Bruh", Toast.LENGTH_SHORT).show()
+        cardView.visibility = VISIBLE
+        cardText.text = "Haluatko poistaa reseptin"
+
+        cardExitButton.setOnClickListener{
+            cardView.visibility = INVISIBLE
+        }
+
+        cardConfirmButton.setOnClickListener{
+            scope.launch{
+                dao.deleteRecipe(recipe)
+                recipeList = dao.getAllRecipes()
+                cardView.visibility = INVISIBLE
+                initRecyclerView(recipeList)
+            }
+        }
     }
-        
-    
 }

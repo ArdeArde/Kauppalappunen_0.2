@@ -23,9 +23,9 @@
     <EditText
         android:id="@+id/etRecipeIngredients"
         android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_height="75dp"
 
-        android:hint="Kirjoita reseptin ainesosat tähän pilkuilla eroteltuna"
+        android:hint="Bruh"
         android:textSize="20sp"
 
         android:background="@color/white"
@@ -41,7 +41,7 @@
 
         android:layout_marginLeft="40dp"
 
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="400dp"
         android:background="@drawable/roundbutton"
 
         android:text="X"
@@ -62,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="400dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
