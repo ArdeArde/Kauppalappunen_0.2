@@ -28,7 +28,7 @@ private lateinit var factory: RecipeViewModelFactory
 private var shoppingListUnparsed= listOf<String>()
 private var tempList = listOf<Recipe>()
 private lateinit var tempRecipe: Recipe
-private var shoppingList = listOf<String>()
+private lateinit var shoppingList : String
 private var parsingList = listOf<String>()
 private lateinit var tempString: String
 class CreateShoppingListAcitivity : ComponentActivity(){
@@ -57,18 +57,19 @@ class CreateShoppingListAcitivity : ComponentActivity(){
         }
 
         confirmListButton.setOnClickListener{
+            shoppingListUnparsed = shoppingListUnparsed.plus("bruh")
             if (shoppingListUnparsed.isEmpty()){
                 Toast.makeText(this, "shopping list is empty", Toast.LENGTH_SHORT).show()
             }else{
                 var x = 0
-                while (x < shoppingListUnparsed.size){
-                    tempString = shoppingListUnparsed[x].toString()
-                    parsingList = tempString.split("-")
-                    parsingList.forEach{it ->
-                        shoppingList = shoppingList.plus(it)
-                    }
-                    x++
-                }
+                //while (x < shoppingListUnparsed.size){
+                //    tempString = shoppingListUnparsed[x].toString()
+                //    parsingList = tempString.split("-")
+                //    parsingList.forEach{it ->
+                //        shoppingList = shoppingList.plus(it)
+                   // }
+                //    x++
+                //}
                 val intent = Intent(this, ShoppingListAcitivty::class.java)
                 //intent.putExtra("SHOPPINGLIST", shoppingList)
                 startActivity(intent)
