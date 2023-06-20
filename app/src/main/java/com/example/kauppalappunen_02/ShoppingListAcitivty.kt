@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 private lateinit var exitButton: Button
 private lateinit var shoppingList: RecyclerView
-private var ingredientArray = listOf<String>("Makaroonia","Jauhenlihaa","Pepsiä","Tofua")
+private var ingredientArray = listOf<String>()
+private lateinit var intentString: String
 
 
 class ShoppingListAcitivty : ComponentActivity(){
@@ -20,7 +21,10 @@ class ShoppingListAcitivty : ComponentActivity(){
 
         shoppingList = findViewById<RecyclerView>(R.id.rvShoppingList)
         exitButton = findViewById<Button>(R.id.btnExit)
-        var intentList = intent.getStringExtra("SHOPPINGLISTSTRING")
+        intentString = intent.getStringExtra("SHOPPINGLIST").toString()
+        ingredientArray = intentString.split("-")
+
+
 
         initRecyclerView(ingredientArray)
 
@@ -40,6 +44,9 @@ class ShoppingListAcitivty : ComponentActivity(){
 
     private fun listItemClicked(ingredient : String){
         Toast.makeText(this, "bruh", Toast.LENGTH_SHORT).show()
+    }
 
+    private fun parseStringIntoList(intentString: String): List<String>{
+        return ingredientArray
     }
 }

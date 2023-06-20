@@ -25,7 +25,7 @@ private lateinit var viewModel: RecipeViewModel
 private lateinit var scope: CoroutineScope
 private lateinit var dao: RecipeDao
 private lateinit var factory: RecipeViewModelFactory
-private var shoppingListUnparsed= listOf<String>()
+private lateinit var shoppingListUnparsed: String
 private var tempList = listOf<Recipe>()
 private lateinit var tempRecipe: Recipe
 private lateinit var shoppingList : String
@@ -44,6 +44,7 @@ class CreateShoppingListAcitivity : ComponentActivity(){
         factory = RecipeViewModelFactory(dao)
         viewModel = ViewModelProvider(this, factory).get(RecipeViewModel::class.java)
         scope = CoroutineScope(Dispatchers.Main)
+        shoppingListUnparsed = ""
 
         scope.launch{
             recipeList = dao.getAllRecipes()
@@ -61,17 +62,8 @@ class CreateShoppingListAcitivity : ComponentActivity(){
             if (shoppingListUnparsed.isEmpty()){
                 Toast.makeText(this, "shopping list is empty", Toast.LENGTH_SHORT).show()
             }else{
-                var x = 0
-                //while (x < shoppingListUnparsed.size){
-                //    tempString = shoppingListUnparsed[x].toString()
-                //    parsingList = tempString.split("-")
-                //    parsingList.forEach{it ->
-                //        shoppingList = shoppingList.plus(it)
-                   // }
-                //    x++
-                //}
                 val intent = Intent(this, ShoppingListAcitivty::class.java)
-                //intent.putExtra("SHOPPINGLIST", shoppingList)
+                intent.putExtra("SHOPPINGLIST", shoppingListUnparsed)
                 startActivity(intent)
             }
         }
@@ -85,10 +77,8 @@ class CreateShoppingListAcitivity : ComponentActivity(){
     }
 
     private fun listItemClicked(recipe : Recipe){
-        val nameString = recipe.name
-        tempRecipe = tempList.find { recipe ->
-            recipe.name == nameString
-        }!!
-        shoppingListUnparsed = shoppingListUnparsed.plus(tempRecipe.ingredients)
+        var nameString = recipe.ingredients
+        shoppingListUnparsed = shoppingListUnparsed + nameString + "-"
+        Toast.makeText(this, "Item added to shopping list", Toast.LENGTH_SHORT).show()
     }
 }
