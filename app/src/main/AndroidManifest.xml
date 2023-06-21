@@ -16,7 +16,7 @@
         <activity android:name=".SettingsAcitivity"/>
         <activity android:name=".ShoppingListAcitivty"/>
         <activity android:name=".CreateRecipeActivity"/>
-        <activity android:name=".CreateShoppingListAcitivity"/>
+        <activity android:name=".CreateShoppingListActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

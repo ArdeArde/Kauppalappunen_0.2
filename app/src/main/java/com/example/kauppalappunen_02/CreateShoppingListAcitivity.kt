@@ -17,8 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private lateinit var exitButton: Button
-private lateinit var confirmListButton: Button
+//private lateinit var exitButton: Button
+//private lateinit var confirmListButton: Button
 private lateinit var recipeMenu: RecyclerView
 private var recipeList = listOf<Recipe>()
 private lateinit var viewModel: RecipeViewModel
@@ -27,22 +27,19 @@ private lateinit var dao: RecipeDao
 private lateinit var factory: RecipeViewModelFactory
 private lateinit var shoppingListUnparsed: String
 private var tempList = listOf<Recipe>()
-private lateinit var tempRecipe: Recipe
-private lateinit var shoppingList : String
-private var parsingList = listOf<String>()
-private lateinit var tempString: String
-class CreateShoppingListAcitivity : ComponentActivity(){
+
+class CreateShoppingListActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_shopping_list)
 
-        recipeMenu = findViewById<RecyclerView>(R.id.rvRecipeMenu)
-        exitButton = findViewById<Button>(R.id.btnExit)
-        confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
+        recipeMenu = findViewById(R.id.rvRecipeMenu)
+        val exitButton = findViewById<Button>(R.id.btnExit)
+        val confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
 
         dao = RecipeDatabase.getInstance(application).RecipeDao()
         factory = RecipeViewModelFactory(dao)
-        viewModel = ViewModelProvider(this, factory).get(RecipeViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[RecipeViewModel::class.java]
         scope = CoroutineScope(Dispatchers.Main)
         shoppingListUnparsed = ""
 
@@ -58,7 +55,6 @@ class CreateShoppingListAcitivity : ComponentActivity(){
         }
 
         confirmListButton.setOnClickListener{
-            shoppingListUnparsed = shoppingListUnparsed.plus("bruh")
             if (shoppingListUnparsed.isEmpty()){
                 Toast.makeText(this, "shopping list is empty", Toast.LENGTH_SHORT).show()
             }else{
@@ -77,8 +73,8 @@ class CreateShoppingListAcitivity : ComponentActivity(){
     }
 
     private fun listItemClicked(recipe : Recipe){
-        var nameString = recipe.ingredients
-        shoppingListUnparsed = shoppingListUnparsed + nameString + "-"
+        val nameString = recipe.ingredients
+        shoppingListUnparsed = "$shoppingListUnparsed$nameString-"
         Toast.makeText(this, "Item added to shopping list", Toast.LENGTH_SHORT).show()
     }
 }

@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
         }
 
         newShoppingListButton.setOnClickListener{
-            val intent = Intent(this, CreateShoppingListAcitivity::class.java)
+            val intent = Intent(this, CreateShoppingListActivity::class.java)
             startActivity(intent)
         }
     }
