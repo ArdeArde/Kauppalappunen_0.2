@@ -17,8 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//private lateinit var exitButton: Button
-//private lateinit var confirmListButton: Button
 private lateinit var recipeMenu: RecyclerView
 private var recipeList = listOf<Recipe>()
 private lateinit var viewModel: RecipeViewModel
@@ -58,7 +56,7 @@ class CreateShoppingListActivity : ComponentActivity(){
             if (shoppingListUnparsed.isEmpty()){
                 Toast.makeText(this, "shopping list is empty", Toast.LENGTH_SHORT).show()
             }else{
-                val intent = Intent(this, ShoppingListAcitivty::class.java)
+                val intent = Intent(this, ShoppingListActivity::class.java)
                 intent.putExtra("SHOPPINGLIST", shoppingListUnparsed)
                 startActivity(intent)
             }
