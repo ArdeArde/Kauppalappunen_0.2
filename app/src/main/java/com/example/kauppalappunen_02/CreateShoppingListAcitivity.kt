@@ -3,6 +3,7 @@ package com.example.kauppalappunen_02
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,8 @@ class CreateShoppingListActivity : ComponentActivity(){
         recipeMenu = findViewById(R.id.rvRecipeMenu)
         val exitButton = findViewById<Button>(R.id.btnExit)
         val confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
+        val extraItemTextView = findViewById<TextView>(R.id.tvExtraItemName)
+        val extraItemButton = findViewById<Button>(R.id.btnExtraItemConfirm)
 
         dao = RecipeDatabase.getInstance(application).RecipeDao()
         factory = RecipeViewModelFactory(dao)
@@ -60,6 +63,12 @@ class CreateShoppingListActivity : ComponentActivity(){
                 intent.putExtra("SHOPPINGLIST", shoppingListUnparsed)
                 startActivity(intent)
             }
+        }
+
+        extraItemButton.setOnClickListener{
+            var extraItemString = extraItemTextView.text.toString()
+            shoppingListUnparsed = "$shoppingListUnparsed$extraItemString-"
+            extraItemTextView.text = ""
         }
     }
 
