@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <TextView
+            <EditText
                 android:id="@+id/tvExtraItemName"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"

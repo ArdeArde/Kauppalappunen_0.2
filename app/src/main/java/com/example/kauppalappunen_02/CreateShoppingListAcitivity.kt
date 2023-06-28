@@ -3,6 +3,7 @@ package com.example.kauppalappunen_02
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -35,7 +36,7 @@ class CreateShoppingListActivity : ComponentActivity(){
         recipeMenu = findViewById(R.id.rvRecipeMenu)
         val exitButton = findViewById<Button>(R.id.btnExit)
         val confirmListButton = findViewById<Button>(R.id.btnConfirmShoppingList)
-        val extraItemTextView = findViewById<TextView>(R.id.tvExtraItemName)
+        val extraItemTextView = findViewById<EditText>(R.id.tvExtraItemName)
         val extraItemButton = findViewById<Button>(R.id.btnExtraItemConfirm)
 
         dao = RecipeDatabase.getInstance(application).RecipeDao()
@@ -68,7 +69,8 @@ class CreateShoppingListActivity : ComponentActivity(){
         extraItemButton.setOnClickListener{
             var extraItemString = extraItemTextView.text.toString()
             shoppingListUnparsed = "$shoppingListUnparsed$extraItemString-"
-            extraItemTextView.text = ""
+            extraItemTextView.text.clear()
+            Toast.makeText(this, "Unique item added to list", Toast.LENGTH_SHORT).show()
         }
     }
 
