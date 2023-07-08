@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 class RecipesActivity : ComponentActivity(){
 
     private lateinit var recipeMenu: RecyclerView
+    private lateinit var recipeClickedMenu: RecyclerView
     private var recipeList = listOf<Recipe>(
         Recipe(0, "Väärin", "Meni")
     )
@@ -42,6 +43,7 @@ class RecipesActivity : ComponentActivity(){
         setContentView(R.layout.activity_recipes)
 
         recipeMenu = findViewById<RecyclerView>(R.id.rvRecipeMenu)
+        recipeClickedMenu = findViewById(R.id.rvRecipeMenuItemClicked)
         val exitButton = findViewById<Button>(R.id.btnExit)
         val newRecipeButton = findViewById<Button>(R.id.btnAddNewRecipe)
 
@@ -81,7 +83,15 @@ class RecipesActivity : ComponentActivity(){
             listItemClicked(selectedItem)
         }
     }
+
+    private fun initRecyclerViewIngredients(ingredientList : List<String>){
+        recipeClickedMenu.layoutManager = LinearLayoutManager(this)
+        recipeClickedMenu.adapter = IngredientRecyclerViewAdapter(ingredientList){selectedItem: String ->
+        }
+    }
     private fun listItemClicked(recipe : Recipe){
+        var ingredientList = recipe.ingredients.split("-")
+        initRecyclerViewIngredients(ingredientList)
         cardView.visibility = VISIBLE
         cardText.text = "Haluatko poistaa reseptin"
 

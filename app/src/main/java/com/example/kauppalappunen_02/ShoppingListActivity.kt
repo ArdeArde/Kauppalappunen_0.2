@@ -2,6 +2,7 @@ package com.example.kauppalappunen_02
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,7 +47,9 @@ class ShoppingListActivity : ComponentActivity(){
     }
 
     private fun prepareTheArray(ingredientString: String): List<String>{
-        var modifiedArray = ingredientString.split("-")
+        var newIngredientString = ingredientString.dropLast(1)
+        var modifiedArray = newIngredientString.split("-")
+        Log.i("mytag", modifiedArray.toString())
         var mutableModifiedArray = modifiedArray.toMutableList()
         mutableModifiedArray.sort()
         modifiedArray = mutableModifiedArray
