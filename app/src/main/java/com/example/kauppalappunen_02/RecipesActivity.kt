@@ -84,14 +84,15 @@ class RecipesActivity : ComponentActivity(){
         }
     }
 
-    private fun initRecyclerViewIngredients(ingredientList : List<String>){
+    private fun initRecyclerViewIngredients(ingredientList : List<String>, recipe : Recipe){
         recipeClickedMenu.layoutManager = LinearLayoutManager(this)
         recipeClickedMenu.adapter = IngredientRecyclerViewAdapter(ingredientList){selectedItem: String ->
+            ingredientItemClicked(selectedItem, recipe)
         }
     }
     private fun listItemClicked(recipe : Recipe){
         var ingredientList = recipe.ingredients.split("-")
-        initRecyclerViewIngredients(ingredientList)
+        initRecyclerViewIngredients(ingredientList, recipe)
         cardView.visibility = VISIBLE
         cardText.text = "Haluatko poistaa reseptin"
 
@@ -107,5 +108,19 @@ class RecipesActivity : ComponentActivity(){
                 initRecyclerView(recipeList)
             }
         }
+    }
+
+    private fun ingredientItemClicked(ingredient : String, recipe : Recipe){
+        var modifiedRecipe = recipe
+        var modifiedIngredients = recipe.ingredients
+        modifiedIngredients = modifiedIngredients.replace(ingredient, "")
+        modifiedIngredients = modifiedIngredients.replace("--","-")
+        modifiedRecipe.ingredients = modifiedIngredients
+        scope.launch{
+            dao.updateRecipe(modifiedRecipe)
+
+        }
+        var ingredientList = modifiedRecipe.ingredients.split("-")
+        initRecyclerViewIngredients(ingredientList, recipe)
     }
 }

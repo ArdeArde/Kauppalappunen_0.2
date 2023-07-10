@@ -9,9 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#CAC2C2</color>
 
-    <color name="lappunenLapis">#33658A</color>
-    <color name="lappunenBlue">#86BBD8</color>
-    <color name="lappunenMoss">#758E4F</color>
-    <color name="lappunenHoney">#F6AE2D</color>
-    <color name="lappunenOrange">#F26419</color>
+    <color name="lappunenLapis">#662C91</color>
+    <color name="lappunenBlue">#17A398</color>
+    <color name="lappunenMoss">#33312E</color>
+    <color name="lappunenHoney">#F38D68</color>
+    <color name="lappunenOrange">#EE6C4D</color>
 </resources>
