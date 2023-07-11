@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -34,6 +35,8 @@ class RecipesActivity : ComponentActivity(){
     private lateinit var cardText: TextView
     private lateinit var cardExitButton: Button
     private lateinit var cardConfirmButton: Button
+    private lateinit var editTextNewIngredient: EditText
+    private lateinit var buttonNewIngredient: Button
     private lateinit var scope: CoroutineScope
     private lateinit var dao: RecipeDao
     private lateinit var factory: RecipeViewModelFactory
@@ -49,7 +52,7 @@ class RecipesActivity : ComponentActivity(){
 
         dao = RecipeDatabase.getInstance(application).RecipeDao()
         factory = RecipeViewModelFactory(dao)
-        viewModel = ViewModelProvider(this,factory).get(RecipeViewModel::class.java)
+        viewModel = ViewModelProvider(this,factory)[RecipeViewModel::class.java]
         scope = CoroutineScope(Dispatchers.Main)
 
         //Cardview Things
@@ -58,6 +61,8 @@ class RecipesActivity : ComponentActivity(){
         cardText = findViewById<TextView>(R.id.tvCardText)
         cardExitButton = findViewById<Button>(R.id.btnCardNegative)
         cardConfirmButton = findViewById<Button>(R.id.btnCardPositive)
+        buttonNewIngredient = findViewById<Button>(R.id.btnAddNewIngredientToRecipe)
+        editTextNewIngredient = findViewById<EditText>(R.id.etAddNewIngredientToRecipe)
 
         //Cardview
 
@@ -92,9 +97,36 @@ class RecipesActivity : ComponentActivity(){
     }
     private fun listItemClicked(recipe : Recipe){
         var ingredientList = recipe.ingredients.split("-")
+        if(ingredientList.isNotEmpty() && ingredientList[0] == ""){
+            ingredientList = ingredientList.drop(1)
+        }
         initRecyclerViewIngredients(ingredientList, recipe)
         cardView.visibility = VISIBLE
         cardText.text = "Haluatko poistaa reseptin"
+
+        buttonNewIngredient.setOnClickListener{
+            if(editTextNewIngredient.text.equals("")){
+                Toast.makeText(this, "Cannot add an empty ingredient", Toast.LENGTH_SHORT).show()
+            }else{
+                var modifiedIngredients = recipe.ingredients + "-" + editTextNewIngredient.text
+                editTextNewIngredient.text.clear()
+                var modifiedRecipe = recipe
+                modifiedIngredients = modifiedIngredients.replace("--","-")
+                if (modifiedIngredients == "-"){
+                    modifiedIngredients = ""
+                }
+                modifiedRecipe.ingredients = modifiedIngredients
+                Log.i("mytag", modifiedRecipe.toString())
+                scope.launch{
+                    dao.updateRecipe(modifiedRecipe)
+                }
+                var ingredientList = modifiedRecipe.ingredients.split("-")
+                if(ingredientList.isNotEmpty() && ingredientList[0] == ""){
+                    ingredientList = ingredientList.drop(1)
+                }
+                initRecyclerViewIngredients(ingredientList, modifiedRecipe)
+            }
+        }
 
         cardExitButton.setOnClickListener{
             cardView.visibility = INVISIBLE
@@ -115,12 +147,19 @@ class RecipesActivity : ComponentActivity(){
         var modifiedIngredients = recipe.ingredients
         modifiedIngredients = modifiedIngredients.replace(ingredient, "")
         modifiedIngredients = modifiedIngredients.replace("--","-")
+        if (modifiedIngredients == "-"){
+            modifiedIngredients = ""
+        }
         modifiedRecipe.ingredients = modifiedIngredients
+        Log.i("mytag", modifiedRecipe.toString())
         scope.launch{
             dao.updateRecipe(modifiedRecipe)
-
         }
         var ingredientList = modifiedRecipe.ingredients.split("-")
+        ingredientList = ingredientList.filter{it.isNotEmpty()}
+        if(ingredientList.isNotEmpty() && ingredientList[0] == ""){
+            ingredientList = ingredientList.drop(1)
+        }
         initRecyclerViewIngredients(ingredientList, recipe)
     }
 }
