@@ -155,6 +155,66 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+    
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvGiveNewItemName"
+        android:layout_width="400dp"
+        android:layout_height="120dp"
+
+        app:cardCornerRadius="20dp"
+        android:backgroundTint="@color/lappunenBlue"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNameNewRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="What is the name of the new recipe?"
+                android:textSize="24sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="2dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etNameNewRecipe"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:hint="Name your new Recipe"
+                    android:textSize="27sp"/>
+
+                <Button
+                    android:id="@+id/btnAddNewRecipeName"
+                    android:layout_width="100dp"
+                    android:layout_height="36dp"
+                    android:text=">"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:background="@color/lappunenHoney"
+                    android:layout_marginTop="19dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

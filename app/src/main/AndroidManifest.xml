@@ -15,7 +15,6 @@
         <activity android:name=".RecipesActivity"/>
         <activity android:name=".SettingsAcitivity"/>
         <activity android:name=".ShoppingListActivity"/>
-        <activity android:name=".CreateRecipeActivity"/>
         <activity android:name=".CreateShoppingListActivity"/>
         <activity
             android:name=".MainActivity"
