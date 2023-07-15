@@ -27,9 +27,6 @@ class RecipesActivity : ComponentActivity(){
 
     private lateinit var recipeMenu: RecyclerView
     private lateinit var recipeClickedMenu: RecyclerView
-    private var recipeList = listOf<Recipe>(
-        Recipe(0, "Väärin", "Meni")
-    )
     private lateinit var viewModel: RecipeViewModel
     private lateinit var cardView: CardView
     private lateinit var cardViewNewRecipe: CardView
@@ -45,22 +42,29 @@ class RecipesActivity : ComponentActivity(){
     private lateinit var factory: RecipeViewModelFactory
     private lateinit var exitButton: Button
     private lateinit var newRecipeButton: Button
+    private var recipeList = listOf<Recipe>(
+        Recipe(0, "Väärin", "Meni")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipes)
+
+        //Main view element initializations
 
         recipeMenu = findViewById<RecyclerView>(R.id.rvRecipeMenu)
         recipeClickedMenu = findViewById(R.id.rvRecipeMenuItemClicked)
         exitButton = findViewById<Button>(R.id.btnExit)
         newRecipeButton = findViewById<Button>(R.id.btnAddNewRecipe)
 
+        //Recylerview and database initializations
+
         dao = RecipeDatabase.getInstance(application).RecipeDao()
         factory = RecipeViewModelFactory(dao)
         viewModel = ViewModelProvider(this,factory)[RecipeViewModel::class.java]
         scope = CoroutineScope(Dispatchers.Main)
 
-        //Cardview Things
+        //Cardview element initializations
 
         cardView = findViewById<CardView>(R.id.cvWindow)
         cardText = findViewById<TextView>(R.id.tvCardText)
@@ -68,17 +72,15 @@ class RecipesActivity : ComponentActivity(){
         cardConfirmButton = findViewById<Button>(R.id.btnCardPositive)
         buttonNewIngredient = findViewById<Button>(R.id.btnAddNewIngredientToRecipe)
         editTextNewIngredient = findViewById<EditText>(R.id.etAddNewIngredientToRecipe)
-
         cardViewNewRecipe = findViewById(R.id.cvGiveNewItemName)
         newRecipeNameEditText = findViewById(R.id.etNameNewRecipe)
         newRecipeNameButton = findViewById(R.id.btnAddNewRecipeName)
 
-        //Cardview
+        //Fill the recyclerview
 
-        scope.launch{
-            recipeList = dao.getAllRecipes()
-            initRecyclerView(recipeList)
-        }
+        fillRecipeRecyclerView()
+
+        //Set clicklisteners onto main buttons
 
         exitButton.setOnClickListener{
             val intent = Intent(this, MainActivity::class.java)
@@ -89,6 +91,8 @@ class RecipesActivity : ComponentActivity(){
             cardViewNewRecipe.visibility = VISIBLE
         }
 
+        //Clicklisteners of the newRecipeCardView
+
         newRecipeNameButton.setOnClickListener{
             val name = newRecipeNameEditText.text.toString()
             var newRecipe = Recipe(0,name, "" )
@@ -97,10 +101,7 @@ class RecipesActivity : ComponentActivity(){
             }
             newRecipeNameEditText.text.clear()
             cardViewNewRecipe.visibility = INVISIBLE
-            scope.launch{
-                recipeList = dao.getAllRecipes()
-                initRecyclerView(recipeList)
-            }
+            fillRecipeRecyclerView()
             listItemClicked(newRecipe)
         }
     }
@@ -119,13 +120,13 @@ class RecipesActivity : ComponentActivity(){
         }
     }
     private fun listItemClicked(recipe : Recipe){
+        cardView.visibility = VISIBLE
+        cardText.text = recipe.name
         var ingredientList = recipe.ingredients.split("-")
         if(ingredientList.isNotEmpty() && ingredientList[0] == ""){
             ingredientList = ingredientList.drop(1)
         }
         initRecyclerViewIngredients(ingredientList, recipe)
-        cardView.visibility = VISIBLE
-        cardText.text = recipe.name
 
         buttonNewIngredient.setOnClickListener{
             if(editTextNewIngredient.text.equals("")){
@@ -153,17 +154,14 @@ class RecipesActivity : ComponentActivity(){
 
         cardExitButton.setOnClickListener{
             cardView.visibility = INVISIBLE
-            exitButton.visibility = VISIBLE
-            newRecipeButton.visibility = VISIBLE
         }
 
         cardConfirmButton.setOnClickListener{
             scope.launch{
                 dao.deleteRecipe(recipe)
-                recipeList = dao.getAllRecipes()
                 cardView.visibility = INVISIBLE
-                initRecyclerView(recipeList)
             }
+            fillRecipeRecyclerView()
         }
     }
 
@@ -186,5 +184,12 @@ class RecipesActivity : ComponentActivity(){
             ingredientList = ingredientList.drop(1)
         }
         initRecyclerViewIngredients(ingredientList, recipe)
+    }
+
+    private fun fillRecipeRecyclerView(){
+        scope.launch{
+            recipeList = dao.getAllRecipes()
+            initRecyclerView(recipeList)
+        }
     }
 }
